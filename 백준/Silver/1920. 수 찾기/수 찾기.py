@@ -17,4 +17,7 @@ arr.sort()
 target_count = int(input())
 target_list = list(map(int,input().split()))
 for i in target_list:
-    print(find(i))
+    if i<arr[0] or i>arr[-1]:
+        print('0')
+    else:
+        print(find(i))
