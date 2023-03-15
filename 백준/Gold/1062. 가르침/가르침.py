@@ -1,42 +1,60 @@
-from itertools import combinations 
-import sys
-n, k = map(int, input().split())
-answer = 0
-# a,n,t,i,c는 반드시 가르쳐야 함
+def combination(s,K):
+    global subset
+    if len(s)==K:
+        subset.append(s)
+        return s
+    else:
+        if not s:
+            for i in range(1,22):          
+                s = alpha[i]  #s + alpha[i]
+                combination(s,K)
+                s  ='' #s[:-1]
+        else:
+            x=s[-1]
+            for i in range(reverse_alpha[x]+1,22):
+                
+                s=s+alpha[i]
+                combination(s,K)
+                s  = s[:-1]
 
-first_word = {'a','n','t','i','c'}
-
-remain_alphabet = set(chr(i) for i in range(97, 123)) - first_word
-data = [sys.stdin.readline().rstrip()[4:-4] for _ in range(n)]
-
-def countReadableWords(data, learned):
-   cnt = 0
-   for word in data:
-      canRead = 1
-      for w in word:
-          # 안배웠으니까 못읽는다.
-         if learned[ord(w)] == 0:
-            canRead = 0
-            break
-      if canRead == 1:
-         cnt += 1
-   return cnt
-
-if k >= 5:
-   learned = [0] * 123
-   for x in first_word:
-      learned[ord(x)] = 1
-
-   # 남은 알파벳 중에서 k-5개를 선택해본다.
-   for teach in list(combinations(remain_alphabet, k-5)):
-      for t in teach:
-         learned[ord(t)] = 1
-      cnt = countReadableWords(data, learned)
-
-      if cnt > answer:
-         answer = cnt
-      for t in teach:
-         learned[ord(t)] = 0
-   print(answer)
+N, K = map(int,input().split())
+arr = []
+for _ in range(N):
+    s = list(input())
+    s.sort()
+    s=set(s)
+    s = s - set(['a','n','t','i','c'])
+    ans = ''
+    for i in s:
+        ans = i + ans
+    arr.append(ans)
+#print(arr)
+alpha = {1:'b' ,2:'d',3:'e',4:'f',5:'g',6:'h',7:'j',8:'k',9:'l',10:'m',11:'o',12:'p',13:'q',14:'r',15:'s',16:'u',17:'v',18:'w',19:'x',20:'y',21:'z'}
+reverse_alpha = {v:k for k,v in alpha.items()}
+subset=[]
+# alpha = ['b','d','e','f','g','h','j','k','l','m','o','p','q','r','s','u','v','w','x','y','z']
+if K<5:
+    answer=0
+    print(answer)
+elif K==5:
+    answer=0
+    for j in arr:
+        if not j:
+            answer+=1
+    print(answer)
 else:
-   print(0)
+    answer =0
+    combination('',K-5)
+    #print(subset)
+    for i in subset:
+        count=0
+        for j in arr:
+            for k in j:
+                if k not in i:    ############ 어떻게 체크할것인지 
+                    break
+            else:
+                count+=1
+        if count>answer:
+            answer = count
+
+    print(answer)
